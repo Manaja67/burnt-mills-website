@@ -1,0 +1,8 @@
+data/
+test-data/
+.env
+.env.*
+!.env.example
+node_modules/
+*.log
+livraison/

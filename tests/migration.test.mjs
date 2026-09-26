@@ -1,0 +1,22 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {mkdtempSync,readdirSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {database} from '../server/db.mjs';
+test('legacy migration preserves accounts, sessions, records and files with private defaults',()=>{
+ const dir=mkdtempSync(join(tmpdir(),'bm-migrate-'));const legacy=new DatabaseSync(join(dir,'burnt-mills.sqlite'));
+ legacy.exec(`PRAGMA foreign_keys=ON;
+ CREATE TABLE users(id TEXT PRIMARY KEY,email TEXT UNIQUE NOT NULL,name TEXT NOT NULL,password TEXT NOT NULL,role TEXT NOT NULL CHECK(role IN ('admin','director','accountant')));
+ CREATE TABLE sessions(token TEXT PRIMARY KEY,user_id TEXT REFERENCES users(id) ON DELETE CASCADE,csrf TEXT NOT NULL,expires INTEGER NOT NULL);
+ CREATE TABLE records(id TEXT PRIMARY KEY,kind TEXT NOT NULL,data TEXT NOT NULL,version INTEGER NOT NULL DEFAULT 1,created_at TEXT NOT NULL,updated_at TEXT NOT NULL);
+ CREATE TABLE files(id TEXT PRIMARY KEY,project_id TEXT NOT NULL REFERENCES records(id),name TEXT NOT NULL,mime TEXT NOT NULL,bytes BLOB NOT NULL,category TEXT NOT NULL,description TEXT NOT NULL,author TEXT NOT NULL,created_at TEXT NOT NULL);
+ INSERT INTO users VALUES('admin-id','admin@example.com','Existing Admin','preserved-hash','admin');
+ INSERT INTO sessions VALUES('session-hash','admin-id','csrf-token',9999999999999);
+ INSERT INTO records VALUES('project-id','projects','{"name":"Existing Project"}',3,'2026-01-01','2026-01-01');
+ INSERT INTO files VALUES('file-id','project-id','plan.pdf','application/pdf',X'255044462D','document','Private plan','Admin','2026-01-01');`);legacy.close();
+ const {db,get}=database(dir);assert.equal(db.prepare('SELECT password FROM users').get().password,'preserved-hash');assert.equal(db.prepare('SELECT user_id FROM sessions').get().user_id,'admin-id');assert.equal(get('projects','project-id').version,3);assert.equal(db.prepare('SELECT audience FROM files').get().audience,'internal');assert.deepEqual(db.prepare('PRAGMA foreign_key_check').all(),[]);assert.equal(db.prepare('PRAGMA integrity_check').get().integrity_check,'ok');
+ const backups=readdirSync(join(dir,'backups'));assert.equal(backups.length,1);const copy=new DatabaseSync(join(dir,'backups',backups[0]),{readOnly:true});assert.equal(copy.prepare('SELECT count(*) AS n FROM users').get().n,1);copy.close();db.close();
+ const again=database(dir);assert.equal(readdirSync(join(dir,'backups')).length,1);assert.equal(again.db.prepare('SELECT count(*) AS n FROM sessions').get().n,1);again.db.close();
+});

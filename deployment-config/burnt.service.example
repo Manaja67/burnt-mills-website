@@ -1,0 +1,22 @@
+[Unit]
+Description=Burnt Mills Investment LLC
+After=network.target
+
+[Service]
+Type=simple
+User=burnt
+Group=burnt
+WorkingDirectory=/srv/burnt/app
+# Adapter le chemin Node selon command -v node.
+ExecStart=/usr/bin/node --env-file=.env server/index.mjs
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/burnt/private
+
+[Install]
+WantedBy=multi-user.target

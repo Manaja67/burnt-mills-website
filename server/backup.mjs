@@ -1,0 +1,12 @@
+import {DatabaseSync,backup} from 'node:sqlite';
+import {mkdirSync,existsSync} from 'node:fs';
+import {resolve,dirname} from 'node:path';
+import {fileURLToPath} from 'node:url';
+const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const data=resolve(process.env.BM_DATA_DIR||resolve(root,'data'));
+const source=resolve(data,'burnt-mills.sqlite');
+if(!existsSync(source))throw new Error('Aucune base / No database');
+const folder=resolve(data,'backups');mkdirSync(folder,{recursive:true});
+const target=resolve(folder,`burnt-mills-${new Date().toISOString().replace(/[:.]/g,'-')}.sqlite`);
+const db=new DatabaseSync(source,{readOnly:true});await backup(db,target);db.close();
+console.log(target);

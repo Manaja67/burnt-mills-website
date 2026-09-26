@@ -1,0 +1,12 @@
+const form=document.querySelector('#estimate-form');
+const hoverStyle=document.createElement('style');hoverStyle.textContent='.desktop-nav a,.site-footer a,.text-link{transition:color .18s ease,background-color .18s ease,box-shadow .18s ease,transform .18s ease}.desktop-nav a:hover,.desktop-nav a:focus-visible{color:#fff;background:#0d2e54;box-shadow:0 0 0 6px #0d2e54;transform:translateY(-1px)}.site-footer a:hover,.site-footer a:focus-visible{color:#0d2e54;background:#e9f1f5;box-shadow:0 0 0 5px #e9f1f5}.text-link:hover,.text-link:focus-visible{color:#fff;background:#0d2e54;box-shadow:0 0 0 7px #0d2e54;transform:translateY(-1px)}.mobile-nav nav a{padding:10px 12px;border-left:3px solid transparent;transition:color .18s ease,background-color .18s ease,border-color .18s ease}.mobile-nav nav a:hover,.mobile-nav nav a:focus-visible{color:#0d2e54;background:#e9f1f5;border-left-color:#0d2e54}';document.head.append(hoverStyle);
+if(form)form.addEventListener('submit',async event=>{
+ event.preventDefault();const button=form.querySelector('button'),status=document.querySelector('#form-status'),fr=document.documentElement.lang==='fr';
+ const t=(f,e)=>fr?f:e;button.disabled=true;status.dataset.error='false';status.textContent=t('Envoi en cours…','Sending…');
+ try{
+  const values=Object.fromEntries(new FormData(form));values.consent=values.consent==='on';values.lang=fr?'fr':'en';
+  const response=await fetch('/api/public/estimate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(values)});
+  if(!response.ok)throw new Error(response.status===429?t('Trop de demandes. Réessayez dans 15 minutes ou appelez-nous.','Too many requests. Please try again in 15 minutes or call us.'):t('La demande n’a pas pu être enregistrée. Vérifiez les champs ou appelez-nous.','Your request could not be recorded. Check the fields or call us.'));
+  form.reset();status.textContent=t('Votre demande a bien été enregistrée. L’équipe pourra vous recontacter aux coordonnées indiquées.','Your request has been recorded. The team can contact you using the details provided.');
+ }catch(error){status.dataset.error='true';status.textContent=error instanceof TypeError?t('Connexion indisponible. Votre demande n’a pas été confirmée. Réessayez ou appelez-nous.','Connection unavailable. Your request has not been confirmed. Try again or call us.'):error.message;}finally{button.disabled=false;}
+});

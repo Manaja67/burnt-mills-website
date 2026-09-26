@@ -1,0 +1,14 @@
+{
+  "date": "2026-09-13T16:32:58.238Z",
+  "results": [
+    "Account setup and explicit sample loading",
+    "French / English switching",
+    "Client creation and escaped untrusted text",
+    "Estimate creation, calculation, issue, acceptance, conversion",
+    "Authenticated image upload and gallery",
+    "All 20 desktop modules render without horizontal document overflow",
+    "Mobile 390px navigation and overflow checks",
+    "No browser JavaScript errors"
+  ],
+  "errors": []
+}
