@@ -62,6 +62,10 @@ L’adresse `127.0.0.1` désigne **cet ordinateur** : elle ne permet pas à un t
 
 Le manifeste prépare l’ajout à l’écran d’accueil. Ce n’est pas une publication App Store ou Google Play. Le cache ne conserve que les ressources publiques de l’interface. Les données privées et fichiers ne sont pas mis en cache par le service worker ; une écriture hors connexion est refusée avec une erreur explicite. Synchronisation terrain hors ligne et notifications push restent à développer.
 
+## Aperçu en ligne gratuit (GitHub Pages)
+
+Chaque envoi sur la branche `main` publie automatiquement la version statique du site vitrine (FR/EN, sans formulaire ni espace de gestion) sur https://manaja67.github.io/burnt-mills-website/. Le workflow `.github/workflows/pages.yml` exécute `node scripts/build-pages.mjs`, qui reprend l'export statique et rend les chemins relatifs. L'aperçu est marqué `noindex` pour ne pas être référencé par les moteurs de recherche. Activation unique : GitHub → Settings → Pages → Source : **GitHub Actions**.
+
 ## Données et sauvegarde
 
 Les données sont conservées dans `data/burnt-mills.sqlite`. Les fichiers téléversés y sont également stockés. Les documents Word et logos sources restent intacts. Les données et secrets sont exclus de Git par `.gitignore`.
