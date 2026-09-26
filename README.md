@@ -66,6 +66,8 @@ Le manifeste prépare l’ajout à l’écran d’accueil. Ce n’est pas une pu
 
 Chaque envoi sur la branche `main` publie automatiquement la version statique du site vitrine (FR/EN, sans formulaire ni espace de gestion) sur https://manaja67.github.io/burnt-mills-website/. Le workflow `.github/workflows/pages.yml` exécute `node scripts/build-pages.mjs`, qui reprend l'export statique et rend les chemins relatifs. L'aperçu est marqué `noindex` pour ne pas être référencé par les moteurs de recherche. Activation unique : GitHub → Settings → Pages → Source : **GitHub Actions**.
 
+L'aperçu contient aussi une **démonstration de l'espace de gestion** (bouton « Espace de gestion (démo) », dossier `demo/`). Le vrai serveur `server/index.mjs` y tourne dans le navigateur du visiteur : les modules Node sont remplacés par de petits équivalents (`demo/shims/`) et SQLite par sql.js (`demo/vendor/`). Les données fictives sont créées par `demo/seed.mjs` via l'API réelle, restent dans le navigateur (localStorage) et ne sont jamais envoyées. Le bandeau permet de passer de la vue direction à la vue client et de réinitialiser. Les mots de passe de hachage y sont volontairement allégés : cette démo n'a aucune valeur de sécurité et ne remplace pas l'hébergement réel.
+
 ## Données et sauvegarde
 
 Les données sont conservées dans `data/burnt-mills.sqlite`. Les fichiers téléversés y sont également stockés. Les documents Word et logos sources restent intacts. Les données et secrets sont exclus de Git par `.gitignore`.

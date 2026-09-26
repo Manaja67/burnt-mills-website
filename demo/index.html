@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"><meta name="theme-color" content="#0d2e54">
+<title>Burnt mills investment LLC · Démo</title>
+<link rel="icon" href="icon.png"><link rel="stylesheet" href="style.css">
+<script type="importmap">{"imports":{"node:http":"./shims/http.mjs","node:fs":"./shims/fs.mjs","node:path":"./shims/path.mjs","node:url":"./shims/url.mjs","node:crypto":"./shims/crypto.mjs","node:sqlite":"./shims/sqlite.mjs"}}</script>
+<style>
+#demo-bar{position:sticky;top:0;z-index:60;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:8px 16px;background:#0d2e54;color:#fff;font:13px/1.4 "Segoe UI",Arial,sans-serif}
+#demo-bar span{flex:1 1 260px}#demo-bar b{color:#8fe0c3;margin-right:6px;letter-spacing:.06em}
+#demo-bar button,#demo-bar a{font:inherit;font-weight:600;color:#fff;background:transparent;border:1px solid #ffffff55;border-radius:6px;padding:5px 10px;cursor:pointer;text-decoration:none}
+#demo-bar button[aria-pressed="true"]{background:#07835f;border-color:#07835f}#demo-bar button:hover,#demo-bar a:hover{border-color:#fff}
+@media(max-width:700px){#demo-bar{position:static;padding:8px 12px;gap:6px;font-size:12px}#demo-bar span{flex-basis:100%}#demo-bar button{padding:4px 8px}#demo-bar a{display:none}}
+@media print{#demo-bar{display:none}}
+</style></head>
+<body><div id="app"><p class="loading">Burnt mills investment LLC…</p></div><dialog id="modal"></dialog><div id="toast" role="status" aria-live="polite"></div>
+<script src="vendor/sql-wasm.js"></script><script type="module" src="boot.mjs"></script></body></html>
